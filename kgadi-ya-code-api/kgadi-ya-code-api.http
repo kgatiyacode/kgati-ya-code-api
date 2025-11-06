@@ -1,0 +1,6 @@
+@kgadi_ya_code_api_HostAddress = http://localhost:5241
+
+GET {{kgadi_ya_code_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
