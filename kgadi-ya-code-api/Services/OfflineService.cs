@@ -98,5 +98,7 @@ public class OfflineService : IOfflineService
         {
             _logger.LogError(ex, "Failed to sync offline data");
         }
+        
+        return Task.CompletedTask;
     }
 }
