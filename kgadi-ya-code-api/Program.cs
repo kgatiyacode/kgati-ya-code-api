@@ -95,7 +95,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only redirect to HTTPS in development (Render handles HTTPS)
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
@@ -107,8 +111,18 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await context.Database.EnsureCreatedAsync();
-        app.Logger.LogInformation("Database connection successful");
+        var connectionString = context.Database.GetConnectionString();
+        
+        // Only try to connect if we have a proper connection string
+        if (!string.IsNullOrEmpty(connectionString) && !connectionString.Contains("localhost"))
+        {
+            await context.Database.EnsureCreatedAsync();
+            app.Logger.LogInformation("✅ Database connection successful");
+        }
+        else
+        {
+            app.Logger.LogInformation("🔄 Running in offline mode - No production database configured");
+        }
     }
     catch (Exception ex)
     {

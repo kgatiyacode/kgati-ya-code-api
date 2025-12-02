@@ -51,11 +51,19 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Images)
                   .HasConversion(
                       v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>());
+                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>())
+                  .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<List<string>>(
+                      (c1, c2) => c1!.SequenceEqual(c2!),
+                      c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                      c => c.ToList()));
             entity.Property(e => e.Tags)
                   .HasConversion(
                       v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>());
+                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>())
+                  .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<List<string>>(
+                      (c1, c2) => c1!.SequenceEqual(c2!),
+                      c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                      c => c.ToList()));
             entity.HasOne(e => e.Business)
                   .WithMany(e => e.Products)
                   .HasForeignKey(e => e.BusinessId)
@@ -85,7 +93,11 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.MetaKeywords)
                   .HasConversion(
                       v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>());
+                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>())
+                  .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<List<string>>(
+                      (c1, c2) => c1!.SequenceEqual(c2!),
+                      c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                      c => c.ToList()));
             entity.HasOne(e => e.Website)
                   .WithMany(e => e.Pages)
                   .HasForeignKey(e => e.WebsiteId)
@@ -113,7 +125,11 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.MediaUrls)
                   .HasConversion(
                       v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>());
+                      v => JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>())
+                  .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<List<string>>(
+                      (c1, c2) => c1!.SequenceEqual(c2!),
+                      c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                      c => c.ToList()));
             entity.HasOne(e => e.Business)
                   .WithMany()
                   .HasForeignKey(e => e.BusinessId)
