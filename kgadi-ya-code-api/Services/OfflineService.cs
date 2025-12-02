@@ -70,9 +70,9 @@ public class OfflineService : IOfflineService
         }
     }
 
-    public async Task SyncWhenOnlineAsync()
+    public Task SyncWhenOnlineAsync()
     {
-        if (!_isOnline) return;
+        if (!_isOnline) return Task.CompletedTask;
 
         try
         {

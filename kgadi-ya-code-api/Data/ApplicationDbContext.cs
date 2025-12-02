@@ -113,8 +113,8 @@ public class ApplicationDbContext : DbContext
                       v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
                       v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, (JsonSerializerOptions?)null) ?? new Dictionary<string, object>())
                   .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<Dictionary<string, object>>(
-                      (c1, c2) => c1!.Count == c2!.Count && c1.All(kvp => c2.ContainsKey(kvp.Key) && Equals(kvp.Value, c2[kvp.Key])),
-                      c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.Key.GetHashCode(), v.Value?.GetHashCode() ?? 0)),
+                      (c1, c2) => c1.Count == c2.Count && c1.All(kvp => c2.ContainsKey(kvp.Key) && Equals(kvp.Value, c2[kvp.Key])),
+                      c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.Key.GetHashCode(), v.Value != null ? v.Value.GetHashCode() : 0)),
                       c => new Dictionary<string, object>(c)));
             entity.HasOne(e => e.Business)
                   .WithMany(e => e.SocialMediaAnalytics)
